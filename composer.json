@@ -14,7 +14,7 @@
     "authors": [
         {
             "name": "Guiu",
-            "email": "your-email@example.com"
+            "email": "gerardguiu@gmail.com"
         }
     ],
     "require": {
@@ -25,7 +25,9 @@
     },
     "require-dev": {
         "orchestra/testbench": "^8.0|^9.0",
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +38,10 @@
         "psr-4": {
             "Guiu\\FilamentFilterPresets\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
     },
     "extra": {
         "laravel": {

@@ -1,11 +1,15 @@
-# 🔧 Filament Filter Presets
+# Filament Filter Presets
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/guiu/filament-filter-presets.svg?style=flat-square)](https://packagist.org/packages/guiu/filament-filter-presets)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/guiu/filament-filter-presets/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/guiu/filament-filter-presets/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/guiu/filament-filter-presets/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/guiu/filament-filter-presets/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/guiu/filament-filter-presets.svg?style=flat-square)](https://packagist.org/packages/guiu/filament-filter-presets)
 
 A comprehensive filter preset system for Filament that allows users to save, load, and manage table filters across any resource. Perfect for applications where users frequently need to apply the same set of filters.
 
-## ✨ Features
+![Filament Filter Presets](art/filter-preset.png)
+
+## Features
 
 - 🔖 **Save Filters**: Save any combination of applied filters with a name and description
 - 🔄 **Load Filters**: Quickly apply previously saved filter combinations
@@ -18,7 +22,15 @@ A comprehensive filter preset system for Filament that allows users to save, loa
 
 ## 📸 Screenshots
 
-*Coming soon - showing the save/load filter modals and preview functionality*
+
+### Save Filter Presets
+![Save Filter Preset](art/1.png)
+
+### Load Filter Presets  
+![Load Filter Preset](art/2.png)
+
+### Manage Presets
+![Manage Presets](art/3.png)
 
 ## 🚀 Installation
 
@@ -278,22 +290,18 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
-## 🙏 Credits
+## Credits
 
-- [Guiu](https://github.com/your-username)
+- [Guiu](https://github.com/guiu)
 - [All Contributors](../../contributors)
 
-## 📄 License
+## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-## 🆘 Support
+## Support
 
 If you discover any issues or have questions, please create an issue on GitHub.
-
-## 🌟 Star the Project
-
-If this package helps you, please consider starring the repository. It means a lot! ⭐
 
 ---
 
@@ -304,3 +312,4 @@ If this package helps you, please consider starring the repository. It means a l
 If you like this project and it has been useful to you, you can buy me a coffee! ☕
 
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-☕-orange.svg?style=flat-square)](https://coff.ee/gerardguiu)
+
