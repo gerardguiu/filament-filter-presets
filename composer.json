@@ -1,0 +1,49 @@
+{
+    "name": "guiu/filament-filter-presets",
+    "description": "A comprehensive filter preset system for Filament that allows users to save, load, and manage table filters across any resource",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "filament",
+        "filters",
+        "presets",
+        "tables",
+        "ui"
+    ],
+    "authors": [
+        {
+            "name": "Guiu",
+            "email": "your-email@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "filament/filament": "^3.0",
+        "illuminate/support": "^10.0|^11.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Guiu\\FilamentFilterPresets\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Guiu\\FilamentFilterPresets\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Guiu\\FilamentFilterPresets\\FilamentFilterPresetsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
