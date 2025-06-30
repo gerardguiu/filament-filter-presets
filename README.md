@@ -298,3 +298,9 @@ If this package helps you, please consider starring the repository. It means a l
 ---
 
 **Made with ❤️ for the Filament community** 
+
+## ☕ Buy me a coffee
+
+If you like this project and it has been useful to you, you can buy me a coffee! ☕
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-☕-orange.svg?style=flat-square)](https://coff.ee/gerardguiu)
