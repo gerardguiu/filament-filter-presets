@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-03-26
+
+### Changed
+- Updated release process and documentation
+
 ## [1.0.0] - 2024-03-26
 
 ### Added
@@ -75,4 +80,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🧪 Testing
 - ⚡ Performance
 - 🐛 Bug fix
-- 💔 Breaking change 
+- �� Breaking change 
