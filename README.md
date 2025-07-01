@@ -5,11 +5,24 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/guiu/filament-filter-presets/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/guiu/filament-filter-presets/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/guiu/filament-filter-presets.svg?style=flat-square)](https://packagist.org/packages/guiu/filament-filter-presets)
 
-This package allows users to save and load filter presets in Filament resources.
-
-## 📸 Preview
 
 ![Filter Presets Overview](art/filter-preset.png)
+
+
+This package allows users to save and load predefined filter configurations in Filament resources. It is especially useful when:
+
+- You need quick access to specific combinations of filters that you frequently use
+- You want to create predefined filters for different scenarios or use cases
+- You wish to set default filters that are automatically applied when a list is loaded
+- You want to share filter configurations among different users of the system
+
+With this module, you can:
+- Save your custom filters with a name and description
+- Quickly load previously saved filters
+- Set default filters
+- Manage your saved filters (delete, edit, set as default)
+
+
 
 ### Step by Step
 
@@ -45,32 +58,33 @@ php artisan vendor:publish --tag=filament-filter-presets-translations
 
 ## Usage
 
-1. Add the `HasFilterPresets` trait to your Filament resource:
+1. Add the `HasFilterPresets` trait to your List Resource page (not in the main Resource):
 
 ```php
+namespace App\Filament\Resources\YourResource\Pages;
+
+use Filament\Resources\Pages\ListRecords;
 use Guiu\FilamentFilterPresets\Traits\HasFilterPresets;
 
-class ListProfessionals extends ListRecords
+class ListYourResource extends ListRecords
 {
     use HasFilterPresets;
 
-    // ...
-}
-```
-
-2. Add the filter preset actions to your table header:
-
-```php
-public static function table(Table $table): Table
-{
-    return $table
-        ->headerActions([
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make(),
             ...static::getFilterPresetHeaderActions(),
-        ]);
+        ];
+    }
 }
 ```
 
-3. The filter management buttons will automatically appear in the table header.
+Important:
+- The trait must be added to the List class that extends `ListRecords`
+- Add the filter preset actions in the `getHeaderActions()` method (NOT in the table configuration)
+- Do NOT add the trait to the main Resource class
+
 
 ## Features
 
