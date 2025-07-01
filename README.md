@@ -5,299 +5,197 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/guiu/filament-filter-presets/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/guiu/filament-filter-presets/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/guiu/filament-filter-presets.svg?style=flat-square)](https://packagist.org/packages/guiu/filament-filter-presets)
 
-A comprehensive filter preset system for Filament that allows users to save, load, and manage table filters across any resource. Perfect for applications where users frequently need to apply the same set of filters.
+This package allows users to save and load filter presets in Filament resources.
 
-![Filament Filter Presets](art/filter-preset.png)
+## 📸 Preview
 
-## Features
+![Filter Presets Overview](art/filter-preset.png)
 
-- 🔖 **Save Filters**: Save any combination of applied filters with a name and description
-- 🔄 **Load Filters**: Quickly apply previously saved filter combinations
-- ⭐ **Default Filters**: Set filters to be applied automatically when loading pages
-- 👁️ **Rich Preview**: See exactly what filters a preset contains before applying
-- 🏗️ **Modular Design**: Easy to add to any existing Filament resource
-- 🎨 **Customizable**: Configure labels, behavior, and appearance
-- 🔐 **User-Scoped**: Each user has their own filter presets
-- 📱 **Responsive**: Works seamlessly across all device sizes
+### Step by Step
 
-## 📸 Screenshots
+1. ![Step 1 - Select Filters](art/1.png)
+2. ![Step 2 - Save Preset](art/2.png)
+3. ![Step 3 - Load Preset](art/3.png)
 
+## Prerequisites
 
-### Save Filter Presets
-![Save Filter Preset](art/1.png)
+Before installing this package, make sure your project meets the following requirements:
 
-### Load Filter Presets  
-![Load Filter Preset](art/2.png)
+- PHP 8.1 or higher
+- Laravel 10.0 or higher
+- Filament 3.0 or higher
 
-### Manage Presets
-![Manage Presets](art/3.png)
+## Installation
 
-## 🚀 Installation
-
-You can install the package via composer:
-
+1. Install the package via composer:
 ```bash
 composer require guiu/filament-filter-presets
 ```
 
-Run the installation command:
-
+2. Publish and run the migrations:
 ```bash
-php artisan filament-filter-presets:install
+php artisan vendor:publish --tag=filament-filter-presets-migrations
+php artisan migrate
 ```
 
-This will:
-- Publish the configuration file
-- Publish and run the migrations
-- Set up the necessary database tables
+3. Optionally, you can publish the translations:
+```bash
+php artisan vendor:publish --tag=filament-filter-presets-translations
+```
 
-## 📋 Basic Usage
+## Usage
 
-### 1. Add the Trait to Your Resource
+1. Add the `HasFilterPresets` trait to your Filament resource:
 
 ```php
-<?php
-
-namespace App\Filament\Resources;
-
 use Guiu\FilamentFilterPresets\Traits\HasFilterPresets;
-use Filament\Resources\Resource;
 
-class YourResource extends Resource
+class ListProfessionals extends ListRecords
 {
     use HasFilterPresets;
 
-    // ... your existing resource code
+    // ...
 }
 ```
 
-### 2. Add Filter Actions to Your Table
+2. Add the filter preset actions to your table header:
 
 ```php
 public static function table(Table $table): Table
 {
     return $table
-        ->columns([
-            // ... your columns
-        ])
-        ->filters([
-            // ... your filters
-        ])
         ->headerActions([
-            // Add this line to enable filter presets
-            ...static::getFilterPresetActions(),
+            ...static::getFilterPresetHeaderActions(),
         ]);
 }
 ```
 
-### 3. Auto-apply Default Filters (Optional)
+3. The filter management buttons will automatically appear in the table header.
 
-In your `ListRecords` page:
+## Features
+
+- Save filters with name and description
+- Mark filters as default
+- Load saved filters
+- Manage filters (delete, set as default)
+
+## Advanced Customization
+
+### Button Customization
+
+You can customize the appearance of buttons by overriding the following methods:
 
 ```php
-<?php
-
-namespace App\Filament\Resources\YourResource\Pages;
-
-use App\Filament\Resources\YourResource;
-use Filament\Resources\Pages\ListRecords;
-
-class ListYourResources extends ListRecords
+protected static function getSaveFilterButtonLabel(): string
 {
-    protected static string $resource = YourResource::class;
+    return 'Save filter';
+}
 
-    public function mount(): void
-    {
-        parent::mount();
-        
-        // Auto-apply default filters
-        YourResource::applyDefaultFilterPreset($this);
-    }
+protected static function getLoadFilterButtonLabel(): string
+{
+    return 'Load filter';
+}
+
+protected static function getSaveFilterModalTitle(): string
+{
+    return 'Save filter configuration';
+}
+
+protected static function getLoadFilterModalTitle(): string
+{
+    return 'Load filter configuration';
 }
 ```
 
-That's it! You now have filter presets available in your resource.
+### Integration with Other Plugins
 
-## 🔧 Advanced Configuration
-
-### Custom Filter Configuration
-
-For better user experience, you can define which filters are available for configuration:
+You can integrate this package with other Filament plugins. For example, with the export plugin:
 
 ```php
-public static function getFilterPresetConfiguration(): array
+use Filament\Tables\Actions\ExportAction;
+
+public static function table(Table $table): Table
+{
+    return $table
+        ->headerActions([
+            ...static::getFilterPresetActions(),
+            ExportAction::make()
+                ->beforeExporting(function (Builder $query) {
+                    // Apply saved filters before exporting
+                    if ($preset = static::getDefaultPreset()) {
+                        $query = static::applyPresetFilters($query, $preset);
+                    }
+                    return $query;
+                })
+        ]);
+}
+```
+
+### Custom Actions
+
+You can add custom actions to presets:
+
+```php
+protected static function getFilterPresetActions(): array
 {
     return [
-        'status' => [
-            'type' => 'select',
-            'label' => 'Status',
-            'options' => [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
-                'pending' => 'Pending',
-            ],
-            'multiple' => false,
-        ],
-        'category_id' => [
-            'type' => 'select',
-            'label' => 'Category',
-            'options' => Category::pluck('name', 'id')->toArray(),
-            'multiple' => false,
-        ],
-        'tags' => [
-            'type' => 'select',
-            'label' => 'Tags',
-            'options' => Tag::pluck('name', 'id')->toArray(),
-            'multiple' => true,
-        ],
-        'created_date' => [
-            'type' => 'date',
-            'label' => 'Created Date',
-        ],
-        'search_term' => [
-            'type' => 'text',
-            'label' => 'Search Term',
-        ],
+        ...parent::getFilterPresetActions(),
+        Action::make('duplicatePreset')
+            ->label('Duplicate')
+            ->icon('heroicon-o-duplicate')
+            ->action(fn (FilterPreset $record) => static::duplicatePreset($record)),
     ];
 }
 ```
 
-### Configuration Options
+## Troubleshooting
 
-Publish the config file to customize the package:
+### Common Issues
 
-```bash
-php artisan vendor:publish --tag=filament-filter-presets-config
-```
+1. **Filters are not saving correctly**
+   - Verify that you have run the migrations
+   - Check that you have write permissions to the database
+   - Make sure filters don't contain too large data
 
-Available configuration options:
+2. **Buttons don't appear**
+   - Verify that you have added the `HasFilterPresets` trait
+   - Check that you included `...static::getFilterPresetActions()` in table actions
+   - Clear Laravel cache: `php artisan cache:clear`
 
-```php
-return [
-    // Table name for filter presets
-    'table_name' => 'filter_presets',
-    
-    // User model to use
-    'user_model' => \App\Models\User::class,
-    
-    // Enable/disable specific actions
-    'actions' => [
-        'save_filters' => true,
-        'load_filters' => true,
-        'manage_filters' => true,
-    ],
-    
-    // Customize labels for internationalization
-    'labels' => [
-        'save_filters' => 'Save Filters',
-        'load_filters' => 'Load Filters',
-        // ... more labels
-    ],
-    
-    // Auto-apply default filters
-    'auto_apply_defaults' => true,
-    
-    // And more...
-];
-```
+3. **Error loading default filters**
+   - Verify that the default filter exists
+   - Check that filter fields still exist in the model
+   - Clear config cache: `php artisan config:clear`
 
-## 🎯 How It Works
-
-### Saving Filters
-1. Apply any combination of filters to your table
-2. Click "Save Filters" in the header actions
-3. Enter a name and optional description
-4. Optionally set as default filter
-5. Save!
-
-### Loading Filters
-1. Click "Load Filters" in the header actions
-2. Select from your saved filter presets
-3. See a preview of what the filter contains
-4. Apply the filters instantly
-
-### Managing Filters
-- View all your saved filters in a dedicated management page
-- Edit filter names and descriptions
-- Set/unset default filters
-- Delete filters you no longer need
-
-## 🔄 Filter Types Supported
-
-The package automatically handles different types of Filament filters:
-
-- **SelectFilter** (single selection)
-- **SelectFilter with multiple()** (multiple selection)
-- **Custom Filters** (like date ranges, text inputs)
-- **TernaryFilter** (true/false/null)
-- **Filter with custom form components**
-
-## 🎨 Customization
-
-### Custom Preview Formatting
-
-Override the preview generation in your resource:
-
-```php
-protected static function generateFilterPreview(FilterPreset $preset): string
-{
-    // Your custom preview logic
-    return "Custom preview for: " . $preset->name;
-}
-```
-
-### Custom Filter Display Names
-
-```php
-protected static function getFilterDisplayName(string $filterName): string
-{
-    return match($filterName) {
-        'category_id' => 'Product Category',
-        'status' => 'Publication Status',
-        default => ucfirst(str_replace('_', ' ', $filterName)),
-    };
-}
-```
-
-### Custom Value Formatting
-
-```php
-protected static function formatFilterValue(string $filterName, $value): ?string
-{
-    return match($filterName) {
-        'category_id' => Category::find($value)?->name ?? "ID: $value",
-        'status' => ucfirst($value),
-        default => parent::formatFilterValue($filterName, $value),
-    };
-}
-```
-
-## 🧪 Testing
+### Solutions
 
 ```bash
-composer test
+# Regenerate composer autoload
+composer dump-autoload
+
+# Clear all caches
+php artisan optimize:clear
+
+# Verify database integrity
+php artisan migrate:status
+
+# If needed, refresh migrations (CAUTION: this will delete data!)
+php artisan migrate:fresh
 ```
 
-## 📝 Changelog
+## Contributing
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+If you want to contribute to the development of this package, please:
 
-## 🤝 Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## 🔒 Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [Guiu](https://github.com/guiu)
-- [All Contributors](../../contributors)
+1. Fork the repository
+2. Create a branch for your feature (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+This package is licensed under the MIT license.
 
 ## Support
 
@@ -305,7 +203,7 @@ If you discover any issues or have questions, please create an issue on GitHub.
 
 ---
 
-**Made with ❤️ for the Filament community** 
+**Made with ❤️ for the Filament community**
 
 ## ☕ Buy me a coffee
 

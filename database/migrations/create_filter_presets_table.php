@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('filter_presets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('resource_class');
             $table->json('filters');
@@ -18,15 +21,13 @@ return new class extends Migration
             $table->boolean('is_default')->default(false);
             $table->timestamps();
 
-            // Ensure unique filter names per user per resource
-            $table->unique(['user_id', 'resource_class', 'name'], 'unique_user_resource_name');
-
-            // Index for performance
             $table->index(['user_id', 'resource_class']);
-            $table->index(['user_id', 'resource_class', 'is_default'], 'user_resource_default_index');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('filter_presets');
